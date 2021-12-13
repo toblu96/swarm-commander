@@ -1,5 +1,5 @@
 import { getGraphQLParameters, processRequest, renderGraphiQL, sendResult, shouldRenderGraphiQL } from "graphql-helix";
-import { schema } from "../graphql/schema";
+import { application } from "../graphql/index";
 import { useQuery, useBody, useMethod, isMethod } from 'h3'
 
 export default async (req, res) => {
@@ -27,7 +27,9 @@ export default async (req, res) => {
             query,
             variables,
             request,
-            schema,
+            schema: application.schema,
+            execute: application.createExecution(),
+            subscribe: application.createSubscription(),
         });
 
 

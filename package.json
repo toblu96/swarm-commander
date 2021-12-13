@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "graphql": "^16.1.0",
-    "graphql-helix": "^1.10.3"
+    "graphql-helix": "^1.10.3",
+    "graphql-modules": "^2.0.0"
   }
 }
