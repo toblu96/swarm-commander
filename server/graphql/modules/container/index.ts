@@ -1,75 +1,91 @@
 import { createModule } from 'graphql-modules';
+import { DateTimeResolver, JSONObjectResolver, IPv4Resolver, IPv6Resolver } from 'graphql-scalars';
 import typeDefs from './container.type';
+import { docker } from '../../../docker/index'
 
-const container = [
-  {
-    _id: 'first',
-    name: 'container name',
-  },
-  {
-    _id: 'second',
-    name: 'container name 2',
-  },
-  {
-    _id: 'third',
-    name: 'container name 3',
-  }
-]
-
-export const UserModule = createModule({
+export const ContainerModule = createModule({
   id: 'container',
   typeDefs: [typeDefs],
   resolvers: {
+    DateTime: DateTimeResolver,
+    JSONObject: JSONObjectResolver,
+    IPv4IPv6: [IPv4Resolver, IPv6Resolver],
     Query: {
-      user(root, { id }) {
-        return {
-          _id: id,
-          username: 'jhon',
-        };
-      },
-      container(root, { filter }) {
-        return container.filter(x => x._id == filter.id);
-      }
-    },
-    Mutation: {
-      createContainer(container) {
-        return {
-          _id: container.id,
-          name: 'some data'
+      async container(root, { all, limit, size, filter }) {
+
+        try {
+          let filterObj = {}
+          if (filter) {
+            'ancestor' in filter ? filterObj['ancestor'] = filter.ancestor : ''
+            'expose' in filter ? filterObj['expose'] = filter.expose : ''
+            'health' in filter ? filterObj['health'] = filter.health : ''
+            'id' in filter ? filterObj['id'] = filter.id : ''
+            'is_task' in filter ? filterObj['is-task'] = [`${filter.is_task}`] : ''
+            'name' in filter ? filterObj['name'] = filter.name : ''
+            'network' in filter ? filterObj['network'] = filter.network : ''
+            'status' in filter ? filterObj['status'] = filter.status : ''
+            'volume' in filter ? filterObj['volume'] = filter.volume : ''
+          }
+
+          return await docker.listContainers({
+            all,
+            limit,
+            size,
+            filters: JSON.stringify(filterObj)
+          })
+        } catch (err) {
+          throw Error(err)
         }
       }
     },
     Container: {
-      id(container) {
-        return container._id
+      Id(container) {
+        return container.Id
       },
-      name(container) {
-        return container.name
-      }
-    },
-    User: {
-      id(user) {
-        return user._id;
+      Names(container) {
+        return container.Names
       },
-      username(user) {
-        return user.username;
+      Image(container) {
+        return container.Image
+      },
+      ImageID(container) {
+        return container.ImageID
+      },
+      Command(container) {
+        return container.Command
+      },
+      Created(container) {
+        return container.Created
+      },
+      State(container) {
+        return container.State
+      },
+      Status(container) {
+        return container.Status
+      },
+      Ports(container) {
+        return container.Ports
+      },
+      Labels(container) {
+        return container.Labels
+      },
+      SizeRw(container) {
+        return container.SizeRw
+      },
+      SizeRootFs(container) {
+        return container.SizeRootFs
+      },
+      HostConfig(container) {
+        return container.HostConfig
+      },
+      NetworkSettings(container) {
+        return container.NetworkSettings
+      },
+      Mounts(container) {
+        return container.Mounts
       },
     },
   },
 });
 
-function buildFilters({ OR = [], description_contains, url_contains }) {
-  const filter = (description_contains || url_contains) ? { description: {}, url: {} } : null;
-  if (description_contains) {
-    filter.description = { $regex: `.*${description_contains}.*` };
-  }
-  if (url_contains) {
-    filter.url = { $regex: `.*${url_contains}.*` };
-  }
 
-  let filters = filter ? [filter] : [];
-  for (let i = 0; i < OR.length; i++) {
-    filters = filters.concat(buildFilters(OR[i]));
-  }
-  return filters;
-}
