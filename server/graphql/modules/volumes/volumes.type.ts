@@ -1,8 +1,8 @@
-import { createModule, gql } from 'graphql-modules';
+import { gql } from 'graphql-modules';
 
 const typeDefs = gql`
     scalar DateTime
-    scalar JSON
+    scalar JSONObject
 
     type Query {
         """
@@ -19,9 +19,9 @@ const typeDefs = gql`
         Driver: String!
         Mountpoint: String!
         CreatedAt: DateTime!
-        Labels: JSON
+        Labels: JSONObject
         Scope: String!
-        Options: JSON
+        Options: JSONObject
     }
 
     """

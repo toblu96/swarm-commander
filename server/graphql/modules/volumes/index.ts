@@ -1,18 +1,14 @@
 import { createModule } from 'graphql-modules';
 import { DateTimeResolver, JSONObjectResolver } from 'graphql-scalars';
 import typeDefs from './volumes.type';
-import Docker from 'dockerode'
-
-// init Docker lib
-var docker = new Docker();
-
+import { docker } from '../../../docker/index'
 
 export const VolumesModule = createModule({
     id: 'volumes',
     typeDefs: [typeDefs],
     resolvers: {
         DateTime: DateTimeResolver,
-        JSON: JSONObjectResolver,
+        JSONObject: JSONObjectResolver,
         Query: {
             async volumes(root, { filter }) {
 
