@@ -1,7 +1,6 @@
 import { createModule, gql } from 'graphql-modules';
 
 const typeDefs = gql`
-    scalar DateTime
     scalar JSONObject
     scalar IPv4IPv6
 
@@ -51,9 +50,9 @@ const typeDefs = gql`
         """
         Command: String
         """
-        When the container was created
+        When the container was created (Unix epoch time format)
         """
-        Created: DateTime
+        Created: Int
         """
         The state of this container (e.g. Exited)
         """

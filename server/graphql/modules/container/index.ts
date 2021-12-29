@@ -1,5 +1,5 @@
 import { createModule } from 'graphql-modules';
-import { DateTimeResolver, JSONObjectResolver, IPv4Resolver, IPv6Resolver } from 'graphql-scalars';
+import { JSONObjectResolver, IPv4Resolver, IPv6Resolver } from 'graphql-scalars';
 import typeDefs from './container.type';
 import { docker } from '../../../docker/index'
 
@@ -7,7 +7,6 @@ export const ContainerModule = createModule({
   id: 'container',
   typeDefs: [typeDefs],
   resolvers: {
-    DateTime: DateTimeResolver,
     JSONObject: JSONObjectResolver,
     IPv4IPv6: [IPv4Resolver, IPv6Resolver],
     Query: {
