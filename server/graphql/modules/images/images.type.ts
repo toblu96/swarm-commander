@@ -27,6 +27,13 @@ const typeDefs = gql`
         ): [Image]
     }
 
+    type Container {
+        """
+        Information of the image used when creating this container
+        """
+        linkedImages: [Image]
+    }
+
     type Image {
         Id: ID!
         ParentId: String!

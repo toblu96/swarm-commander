@@ -2,6 +2,9 @@ import { createModule } from 'graphql-modules';
 import { DateTimeResolver, JSONObjectResolver } from 'graphql-scalars';
 import typeDefs from './images.type';
 import { docker } from '../../../docker/index'
+import { resolveComponent } from 'nuxt3/dist/app/compat/capi';
+
+let containerLinkedImages = []
 
 export const ImagesModule = createModule({
   id: 'images',
@@ -65,7 +68,33 @@ export const ImagesModule = createModule({
       },
 
     },
+    Container: {
+      linkedImages: async (container, args, context, info) => {
+        try {
+          const danglingImages = await getDanglingImages(info.path.prev.key)
+
+          return danglingImages.filter((image) => image.Id === container.ImageID)
+        } catch (err) {
+          throw Error(err)
+        }
+      },
+    },
   },
 });
 
+async function getDanglingImages(pathIdx) {
 
+  // execute query only on first index to prevent loading data multiple times (on each container with linked images)
+  if (pathIdx === 0) {
+    containerLinkedImages = null
+    containerLinkedImages = await docker.listImages({
+      filters: "{\"dangling\":[\"false\"]}"
+    })
+  }
+
+  // wait until data loaded globally
+  while (containerLinkedImages == null)
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+  return containerLinkedImages
+}
