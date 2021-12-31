@@ -5,6 +5,7 @@ import { ServicesModule } from './modules/services';
 import { NodesModule } from './modules/nodes';
 import { TasksModule } from './modules/tasks';
 import { SecretsModule } from './modules/secrets';
+import { ConfigsModule } from './modules/configs';
 import { VolumesModule } from './modules/volumes';
 
 export const application = createApplication({
@@ -15,6 +16,7 @@ export const application = createApplication({
         NodesModule,
         TasksModule,
         SecretsModule,
+        ConfigsModule,
         VolumesModule
     ],
 });
