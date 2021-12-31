@@ -8,6 +8,7 @@ import { SecretsModule } from './modules/secrets';
 import { ConfigsModule } from './modules/configs';
 import { PluginsModule } from './modules/plugins';
 import { VolumesModule } from './modules/volumes';
+import { NetworksModule } from './modules/networks';
 
 export const application = createApplication({
     modules: [
@@ -19,7 +20,8 @@ export const application = createApplication({
         SecretsModule,
         ConfigsModule,
         PluginsModule,
-        VolumesModule
+        VolumesModule,
+        NetworksModule
     ],
 });
 
