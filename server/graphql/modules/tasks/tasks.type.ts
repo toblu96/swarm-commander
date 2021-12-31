@@ -6,7 +6,7 @@ const typeDefs = gql`
 
     type Query {
         """
-        List of Docker services.
+        List of Docker tasks.
         """
         tasks(
             filter: TaskFilter,
