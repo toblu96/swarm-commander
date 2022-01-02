@@ -13,6 +13,15 @@ const typeDefs = gql`
         ): [Secret]
     }
 
+    type Mutation {
+        createSecret(input: SecretInput): String
+        # """
+        # Currently, only the Labels field can be updated. All other fields must remain unchanged from the SecretInspect endpoint response values.
+        # """
+        # updateSecret(id: ID!, version: Int!, input: SecretInput): String
+        deleteSecret(id: ID!): String
+    }
+
     type Secret {
         """
         The ID of the secret.
@@ -61,6 +70,24 @@ const typeDefs = gql`
         ~~~
         """
         names: [String]
+    }
+
+    input SecretInput {
+        """
+        User-defined name of the secret.
+        """
+        Name: String
+        """
+        User-defined key/value metadata.
+        """
+        Labels: JSONObject
+        """
+        Base64-url-safe-encoded (RFC 4648) data to store as secret.
+        This field is only used to create a secret, and is not returned by other endpoints.
+        """
+        Data: String
+        # Driver: JSONObject
+        # Templating: JSONObject
     }
 `;
 
