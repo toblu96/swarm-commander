@@ -12,6 +12,12 @@ const typeDefs = gql`
             filter: ConfigFilter,
         ): [Config]
     }
+    
+    type Mutation {
+        createConfig(input: ConfigInput): String
+        #updateConfig(id: ID!, version: Int!, input: ConfigInput): String
+        deleteConfig(id: ID!): String
+    }
 
     type Config {
         """
@@ -61,6 +67,22 @@ const typeDefs = gql`
         ~~~
         """
         names: [String]
+    }
+
+    input ConfigInput {
+        """
+        User-defined name of the config.
+        """
+        Name: String
+        """
+        User-defined key/value metadata.
+        """
+        Labels: JSONObject
+        """
+        Base64-url-safe-encoded (RFC 4648) config data.
+        """
+        Data: String
+        # Templating: JSONObject
     }
 `;
 
