@@ -12,6 +12,11 @@ const typeDefs = gql`
             filter: NodeFilter,
         ): [Node]
     }
+    
+    type Mutation {
+        updateNode(id: ID!, version: Int!, input: NodeInput): String
+        deleteNode(id: ID!): String
+    }
 
     type Node {
         ID: ID!
@@ -80,6 +85,36 @@ const typeDefs = gql`
         ~~~
         """
         role: [String]
+    }
+
+    input NodeInput {
+        """
+        Name for the node.
+        """
+        Name: String
+        """
+        User-defined key/value metadata.
+        """
+        Labels: JSONObject
+        """
+        Role of the node.
+        """
+        Role: NODEROLE!
+        """
+        Availability of the node.
+        """
+        Availability: NODEAVAILABILITY!
+    }
+
+    enum NODEROLE {
+        worker
+        manager
+    }
+
+    enum NODEAVAILABILITY {
+        active
+        pause
+        drain
     }
 `;
 
